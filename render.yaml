@@ -25,6 +25,8 @@ services:
         value: true
       - key: GOOD_PRICE_RATIO
         value: 0.88
+      - key: SCRAPER_PROXY_URL
+        sync: false
     disk:
       name: avtonet-data
       mountPath: /data
