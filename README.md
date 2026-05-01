@@ -41,6 +41,21 @@ avtonet-bot
 python -m avtonet_bot
 ```
 
+## Деплой на Render
+
+В репозитории есть `render.yaml` для Render Blueprint. Бот разворачивается как Background Worker, потому что Telegram polling не принимает HTTP-трафик и не нуждается в web-порте.
+
+1. Откройте Render Dashboard.
+2. Создайте новый Blueprint и выберите этот GitHub-репозиторий.
+3. При создании Render попросит значения для `sync: false` переменных:
+   - `TELEGRAM_BOT_TOKEN` — токен от BotFather.
+   - `ADMIN_CHAT_ID` — можно оставить пустым, если бот должен работать в любом чате.
+4. Примените Blueprint.
+
+Blueprint создает persistent disk и хранит SQLite в `/var/data/avtonet_bot.sqlite3`. Без диска Render сбрасывает локальные файлы после redeploy, и бот может повторно увидеть старые объявления как новые.
+
+Важно: Background Workers на Render не доступны на free plan. В `render.yaml` указан `starter`.
+
 ## Команды
 
 ```text
