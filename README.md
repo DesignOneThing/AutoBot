@@ -52,7 +52,7 @@ python -m avtonet_bot
    - `ADMIN_CHAT_ID` — можно оставить пустым, если бот должен работать в любом чате.
 4. Примените Blueprint.
 
-Blueprint создает persistent disk и хранит SQLite в `/var/data/avtonet_bot.sqlite3`. Без диска Render сбрасывает локальные файлы после redeploy, и бот может повторно увидеть старые объявления как новые.
+Blueprint создает persistent disk и хранит SQLite в `/data/avtonet_bot.sqlite3`. Без диска Render сбрасывает локальные файлы после redeploy, и бот может повторно увидеть старые объявления как новые.
 
 Важно: Background Workers на Render не доступны на free plan. В `render.yaml` указан `starter`.
 
