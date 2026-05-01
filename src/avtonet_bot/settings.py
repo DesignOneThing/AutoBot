@@ -23,6 +23,7 @@ class Settings:
     max_pages_per_search: int = 3
     good_price_enabled: bool = True
     good_price_ratio: float = 0.88
+    scraper_proxy_url: str | None = None
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -43,4 +44,5 @@ class Settings:
             max_pages_per_search=int(os.getenv("MAX_PAGES_PER_SEARCH", "3")),
             good_price_enabled=_bool_env("GOOD_PRICE_ENABLED", True),
             good_price_ratio=float(os.getenv("GOOD_PRICE_RATIO", "0.88")),
+            scraper_proxy_url=os.getenv("SCRAPER_PROXY_URL", "").strip() or None,
         )
