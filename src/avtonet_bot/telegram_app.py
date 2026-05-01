@@ -6,6 +6,7 @@ import logging
 import time
 from collections import defaultdict
 
+import httpx
 from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import Application, CommandHandler, ContextTypes
@@ -119,7 +120,7 @@ class AvtoNetTelegramBot:
             )
         except Exception as exc:  # noqa: BLE001
             logger.exception("Initial scan failed")
-            await message.edit_text(f"Поиск сохранен, но первичное сканирование упало: {exc}")
+            await message.edit_text(f"Поиск сохранен, но первичное сканирование упало: {_friendly_scan_error(exc)}")
 
     async def list_searches(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         chat_id = self._chat_id(update)
@@ -256,3 +257,13 @@ def _find_url_arg_index(args: list[str]) -> int | None:
         if "avto.net" in cleaned and (cleaned.startswith("http://") or cleaned.startswith("https://")):
             return index
     return None
+
+
+def _friendly_scan_error(exc: Exception) -> str:
+    if isinstance(exc, httpx.HTTPStatusError) and exc.response.status_code == 403:
+        return (
+            "avto.net вернул 403 Forbidden. Это антибот-блокировка HTTP-запросов. "
+            "Для работы нужен реальный HTTP(S)-proxy в SCRAPER_PROXY_URL, например "
+            "http://login:password@host:port. Без прокси этот сайт сейчас не дает сканировать выдачу."
+        )
+    return str(exc)
