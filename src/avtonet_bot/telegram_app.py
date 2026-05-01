@@ -78,15 +78,21 @@ class AvtoNetTelegramBot:
             )
             return
 
-        name = args[0]
-        url = args[1]
+        url_index = _find_url_arg_index(args)
+        if url_index is None:
+            await update.effective_message.reply_text("Нужна ссылка поиска с avto.net.")
+            return
+
+        name = " ".join(args[:url_index]).strip() or "avto.net"
+        url = args[url_index].strip("<>")
         if "avto.net" not in url.lower():
             await update.effective_message.reply_text("Нужна ссылка поиска с avto.net.")
             return
 
-        minutes = _parse_int(args[2], 5) if len(args) >= 3 and not args[2].startswith("deal=") else 5
+        options = args[url_index + 1 :]
+        minutes = _parse_int(options[0], 5) if options and not options[0].startswith("deal=") else 5
         deal_enabled = self.settings.good_price_enabled
-        for arg in args[2:]:
+        for arg in options:
             if arg.lower() in {"deal=off", "deals=off", "price=off"}:
                 deal_enabled = False
             if arg.lower() in {"deal=on", "deals=on", "price=on"}:
@@ -241,3 +247,11 @@ def _parse_int(value: str, default: int) -> int:
         return int(value)
     except ValueError:
         return default
+
+
+def _find_url_arg_index(args: list[str]) -> int | None:
+    for index, arg in enumerate(args):
+        cleaned = arg.strip("<>").lower()
+        if "avto.net" in cleaned and (cleaned.startswith("http://") or cleaned.startswith("https://")):
+            return index
+    return None
