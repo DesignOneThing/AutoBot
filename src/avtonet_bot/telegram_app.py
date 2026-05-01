@@ -26,6 +26,7 @@ class AvtoNetTelegramBot:
         self.scraper = AvtoNetScraper(
             timeout_seconds=settings.request_timeout_seconds,
             max_pages=settings.max_pages_per_search,
+            proxy_url=settings.scraper_proxy_url,
         )
         self.application = Application.builder().token(settings.telegram_bot_token).build()
         self._last_scan_at: dict[int, float] = defaultdict(float)
