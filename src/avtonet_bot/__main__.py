@@ -12,9 +12,13 @@ def main() -> None:
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
+    asyncio.run(_run())
+
+
+async def _run() -> None:
     settings = Settings.from_env()
     bot = AvtoNetTelegramBot(settings)
-    asyncio.run(bot.run())
+    await bot.run()
 
 
 if __name__ == "__main__":
