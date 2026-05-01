@@ -22,9 +22,17 @@ dev = [
 [project.scripts]
 avtonet-bot = "avtonet_bot.__main__:main"
 
+[tool.poetry]
+packages = [
+    { include = "avtonet_bot", from = "src" },
+]
+
 [build-system]
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
