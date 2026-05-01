@@ -18,9 +18,10 @@ class ScrapeResult:
 
 
 class AvtoNetScraper:
-    def __init__(self, timeout_seconds: int = 30, max_pages: int = 3) -> None:
+    def __init__(self, timeout_seconds: int = 30, max_pages: int = 3, proxy_url: str | None = None) -> None:
         self.timeout_seconds = timeout_seconds
         self.max_pages = max_pages
+        self.proxy_url = proxy_url
 
     async def scrape(self, url: str) -> ScrapeResult:
         listings_by_id: dict[str, Listing] = {}
@@ -30,13 +31,22 @@ class AvtoNetScraper:
         async with httpx.AsyncClient(
             follow_redirects=True,
             timeout=self.timeout_seconds,
+            proxy=self.proxy_url,
             headers={
                 "User-Agent": (
                     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                     "AppleWebKit/537.36 (KHTML, like Gecko) "
-                    "Chrome/124.0 Safari/537.36"
+                    "Chrome/124.0.0.0 Safari/537.36"
                 ),
-                "Accept-Language": "sl-SI,sl;q=0.9,en;q=0.8",
+                "Accept": (
+                    "text/html,application/xhtml+xml,application/xml;q=0.9,"
+                    "image/avif,image/webp,image/apng,*/*;q=0.8"
+                ),
+                "Accept-Language": "sl-SI,sl;q=0.9,en-US;q=0.8,en;q=0.7",
+                "Cache-Control": "no-cache",
+                "Pragma": "no-cache",
+                "Referer": "https://www.avto.net/",
+                "Upgrade-Insecure-Requests": "1",
             },
         ) as client:
             while next_url and pages_scanned < self.max_pages:
