@@ -14,7 +14,7 @@ services:
       - key: ADMIN_CHAT_ID
         sync: false
       - key: DATABASE_PATH
-        value: /var/data/avtonet_bot.sqlite3
+        value: /data/avtonet_bot.sqlite3
       - key: SCAN_INTERVAL_SECONDS
         value: 300
       - key: REQUEST_TIMEOUT_SECONDS
@@ -27,5 +27,5 @@ services:
         value: 0.88
     disk:
       name: avtonet-data
-      mountPath: /var/data
+      mountPath: /data
       sizeGB: 1
