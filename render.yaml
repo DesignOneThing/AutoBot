@@ -1,0 +1,31 @@
+services:
+  - type: worker
+    name: avtonet-telegram-bot
+    runtime: python
+    region: frankfurt
+    plan: starter
+    buildCommand: pip install -e .
+    startCommand: avtonet-bot
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: ADMIN_CHAT_ID
+        sync: false
+      - key: DATABASE_PATH
+        value: /var/data/avtonet_bot.sqlite3
+      - key: SCAN_INTERVAL_SECONDS
+        value: 300
+      - key: REQUEST_TIMEOUT_SECONDS
+        value: 30
+      - key: MAX_PAGES_PER_SEARCH
+        value: 3
+      - key: GOOD_PRICE_ENABLED
+        value: true
+      - key: GOOD_PRICE_RATIO
+        value: 0.88
+    disk:
+      name: avtonet-data
+      mountPath: /var/data
+      sizeGB: 1
